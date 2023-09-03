@@ -23,6 +23,10 @@ fn main() {
 }
 
 /* YOUR CODE GOES HERE */
+
+/*
+/// SOLUTION USING `while` loop
+/// 
 fn trim_spaces(input: &str) -> &str {
     if input.is_empty() {
         return input;
@@ -53,4 +57,78 @@ fn trim_spaces(input: &str) -> &str {
     }
 
     &input[first_sym_pos..last_sym_pos + 1]
+}
+*/
+
+
+/*
+/// SOLUTION USING MAPPINGS AND `for` loop
+///
+fn trim_spaces(input: &str) -> &str {
+    let mut start: Option<usize> = None;
+    let mut end: Option<usize> = None;
+
+    let bytes = input.as_bytes();
+    let walker = bytes.iter().enumerate().zip(bytes.iter().rev().enumerate());
+
+    for (i, j) in walker {
+        if start.is_some() && end.is_some() {
+            break;
+        }
+        if start.is_none() && i.1 != &b' ' {
+            start = Some(i.0);
+        }
+        if end.is_none() && j.1 != &b' ' {
+            end = Some(input.len() - j.0);
+        }
+    }
+
+    &input[start.unwrap_or(0)..end.unwrap_or(0)]
+}
+*/
+
+
+/*
+/// SOLUTION INVOLVING BITWISE LOGIC
+/// 
+fn trim_spaces(input: &str) -> &str {
+    let mut start: usize = 0;
+    let mut end: usize = 0;
+    let mut check: u8 = 0;
+
+    let bytes = input.as_bytes();
+    let walker = bytes.iter().enumerate().zip(bytes.iter().rev().enumerate());
+
+    for (i, j) in walker {
+        if check ^ 0x3 == 0 {
+            break;
+        }
+        if check & 0x1 == 0 && i.1 != &b' ' {
+            start = i.0;
+            check |= 0x1;
+        }
+        if check & 0x2 == 0 && j.1 != &b' ' {
+            end = input.len() - j.0;
+            check |= 0x2;
+        }
+    }
+ 
+    &input[start..end]
+}
+*/
+
+
+
+/// SOLUTION BY THE MEANS OF ITERATORS
+/// 
+fn trim_spaces(input: &str) -> &str {
+    let bytes = input.as_bytes();
+    let mut start: usize = bytes.iter()
+        .position(|&c| c != b' ')
+        .unwrap_or(0);
+    let mut end: usize = input.len() - bytes.iter().rev()
+        .position(|&c| c != b' ')
+        .unwrap_or(input.len());
+
+    &input[start..end]
 }
