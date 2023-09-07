@@ -1,3 +1,9 @@
+//! Perform a string trimming
+//!
+//! Double-side string whitespace trimming.
+//! Only '\s' whitespace character is considered for now
+//! 
+
 fn main() {
     let test1 = "We need more space.";
     assert_eq!(trim_spaces(test1), "We need more space.");
