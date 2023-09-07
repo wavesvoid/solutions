@@ -1,3 +1,8 @@
+//! Find median of array of numbers
+//! 
+//! 
+
+
 use std::cmp::Ordering;
 
 
