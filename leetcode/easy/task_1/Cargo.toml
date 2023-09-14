@@ -1,0 +1,7 @@
+[package]
+name = "easy_task_1"
+description = "In a given array find a number pair that in sum result into a provided target number"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]

@@ -1,0 +1,7 @@
+[package]
+name = "easy_task_3"
+description = "Convert given Roman numerical string into an integer number"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
