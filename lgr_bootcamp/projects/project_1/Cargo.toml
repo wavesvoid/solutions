@@ -1,7 +1,0 @@
-[package]
-name = "project_1"
-description = "CLI-app - Jira clone for user-stories"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]

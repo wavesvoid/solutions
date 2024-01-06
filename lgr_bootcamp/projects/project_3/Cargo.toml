@@ -1,7 +1,0 @@
-[package]
-name = "project_3"
-description = "Authorization Microservice"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
