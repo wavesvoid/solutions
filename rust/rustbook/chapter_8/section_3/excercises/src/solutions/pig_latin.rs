@@ -12,7 +12,7 @@
 
 
 
-const VOWELS: [u8; 6] = *b"aeiouy";
+static VOWELS: [u8; 6] = *b"aeiouy";
 
 
 fn convert_into_pig(string: &str) -> Result<String, String> {
