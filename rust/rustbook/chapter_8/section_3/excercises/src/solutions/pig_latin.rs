@@ -51,10 +51,14 @@ mod tests {
 
     #[test]
     fn test_pig_vowel() {
-        let string = String::from("apple");
-        let result = convert_into_pig(&string);
+        let string1 = String::from("apple");
+        let string2 = String::from("a");
+
+        let result1 = convert_into_pig(&string1);
+        let result2 = convert_into_pig(&string2);
         
-        assert_eq!(result, Ok(String::from("apple-hay")));
+        assert_eq!(result1, Ok(String::from("apple-hay")));
+        assert_eq!(result2, Ok(String::from("a-hay")));
     }
 
     #[test]
@@ -76,5 +80,4 @@ mod tests {
         assert_eq!(result1, Err(String::from("ONLY LATIN First-letter!")));
         assert_eq!(result2, Err(String::from("ONLY LATIN First-letter!")));
     }
-
 }
