@@ -12,9 +12,7 @@ pub struct Company {
 
 impl Company {
     pub fn new() -> Self {
-        Self {
-            departments: Default::default(),
-        }
+        Self { departments: Default::default(), }
     }
 
     pub fn add_employee(&mut self, employee: &str, department: &str) {
@@ -22,7 +20,15 @@ impl Company {
             .entry(Department::with_name(department))
             .or_default()
             .push(Employee::with_name(employee));
-    } 
+    }
+
+    pub fn get_all_employees(&self) -> Vec<Employee> {
+        let mut emp_list = vec![];
+        for dep_emp_list in self.departments.values() {
+            emp_list.extend_from_slice(dep_emp_list);
+        }
+        emp_list
+    }
 }
 
 
@@ -40,7 +46,7 @@ impl Department {
 }
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Employee {
     pub name: String,
 }
@@ -59,6 +65,7 @@ impl Employee {
 mod tests {
     use super::*;
     
+    /// Helper utils
     mod test_utils {
         use super::{Department, Company, Employee};
 
@@ -79,35 +86,57 @@ mod tests {
             }
             true
         }
+
+        pub fn create_sample_company() -> (Company, TestDepartments) {
+            let mut company = Company::new();
+            let test_departments: TestDepartments = vec![
+                (
+                    Department { name: "Engineering".to_owned() },
+                    vec![
+                        Employee { name: "John".to_owned() },
+                        Employee { name: "Hannah".to_owned() },
+                    ],
+                ),
+                (
+                    Department { name: "DevOps".to_owned() },
+                    vec![
+                        Employee { name: "Alex".to_owned() },
+                    ],
+                ),
+            ];
+            company.add_employee("John", "Engineering");
+            company.add_employee("Hannah", "Engineering");
+            company.add_employee("Alex", "DevOps");
+            
+            (company, test_departments)
+        }
     }
 
 
     #[test]
+    fn test_get_all_employees() {
+        let (mut company, mut departments)
+            : (Company, test_utils::TestDepartments)
+            = test_utils::create_sample_company();
+        let mut expected = vec![];
+        let mut employees = company.get_all_employees();
 
+        for dep in departments.iter_mut() {
+            expected.append(&mut dep.1);
+        }
+
+        assert!(employees.iter().all(|item| expected.contains(item)));
+    }
 
     #[test]
     fn test_add_employee() {
-        let mut company = Company::new();
-        let expected: test_utils::TestDepartments = vec![
-            (
-                Department { name: "Engineering".to_owned() },
-                vec![
-                    Employee { name: "John".to_owned() },
-                    Employee { name: "Hannah".to_owned() },
-                ],
-            ),
-            (
-                Department { name: "DevOps".to_owned() },
-                vec![
-                    Employee { name: "Alex".to_owned() },
-                ],
-            ),
-        ];
-
-        company.add_employee("John", "Engineering");
-        company.add_employee("Hannah", "Engineering");
-        company.add_employee("Alex", "DevOps");
-
-        assert!(test_utils::check_employees(&company, expected));
+        let (mut company, mut departments)
+            : (Company, test_utils::TestDepartments)
+            = test_utils::create_sample_company();
+        
+        assert!(test_utils::check_employees(
+            &company,
+            departments,
+        ));
     }
 }
