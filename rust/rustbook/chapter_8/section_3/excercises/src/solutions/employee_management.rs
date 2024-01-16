@@ -29,6 +29,10 @@ impl Company {
         }
         emp_list
     }
+
+    pub fn get_all_by_department(&self) -> &DepartmentCollection {
+        &self.departments
+    }
 }
 
 
@@ -114,12 +118,24 @@ mod tests {
 
 
     #[test]
+    fn test_add_employee() {
+        let (company, departments)
+            : (Company, test_utils::TestDepartments)
+            = test_utils::create_sample_company();
+        
+        assert!(test_utils::check_employees(
+            &company,
+            departments,
+        ));
+    }
+
+    #[test]
     fn test_get_all_employees() {
-        let (mut company, mut departments)
+        let (company, mut departments)
             : (Company, test_utils::TestDepartments)
             = test_utils::create_sample_company();
         let mut expected = vec![];
-        let mut employees = company.get_all_employees();
+        let employees = company.get_all_employees();
 
         for dep in departments.iter_mut() {
             expected.append(&mut dep.1);
@@ -129,14 +145,18 @@ mod tests {
     }
 
     #[test]
-    fn test_add_employee() {
-        let (mut company, mut departments)
+    fn test_get_all_by_department() {
+        let (company, mut departments)
             : (Company, test_utils::TestDepartments)
             = test_utils::create_sample_company();
-        
-        assert!(test_utils::check_employees(
-            &company,
-            departments,
-        ));
+        let mut employees = company.get_all_by_department().values().flatten();
+        let mut expected = vec![];
+
+        for dep in departments.iter_mut() {
+            expected.append(&mut dep.1);
+        }
+
+        assert!(employees.all(|item| expected.contains(item)));
     }
+
 }

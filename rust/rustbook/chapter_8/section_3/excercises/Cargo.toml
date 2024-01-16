@@ -6,3 +6,13 @@ description = """
 """
 version = "1.0.0"
 authors = ["Stanislav Doroshenko @wavesvoid"]
+edition = "2021"
+
+[lib]
+name = "chapter8"
+path = "src/lib.rs"
+
+
+[[bin]]
+name = "employee_cli"
+path = "src/bin/employee_cli/main.rs"
