@@ -1,0 +1,5 @@
+[package]
+name = "btree"
+version = "0.1.0"
+authors = ["Stanislav <@wunderwave>"]
+edition = "2021"
