@@ -1,0 +1,5 @@
+[package]
+name = "alg"
+version = "0.1.0"
+authors = ["Stanislav @wavesvoid"]
+edition = "2021"
