@@ -10,8 +10,9 @@ apps = {
     'ex_1_9': ['ex_1_9.c'],
     'ex_1_10': ['ex_1_10.c'],
     'ex_1_12': ['ex_1_12.c'],
+    'ex_1_13': ['ex_1_13.c'],
 }
 
 foreach exname, sources : apps
-    executable(exname, join_paths('src', sources))
+    executable(exname, files(join_paths('src', sources)))
 endforeach
