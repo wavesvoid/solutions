@@ -115,4 +115,5 @@ int main() {
     }
     printf(" %2d+ |\n\n", MAX_WORD_LENGTH);
 
+    return 0;
 }
