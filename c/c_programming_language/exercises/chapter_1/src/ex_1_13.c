@@ -6,19 +6,30 @@
 #include <stdio.h>
 
 
-// Maximum amount of words that can be handled by the program
+// Maximum amount of words with different length
+// that can be handled by the program
+// + 1 last will be the position for all other words which length is larger 
 #define MAX_WORD_LENGTH 21
 #define HISTOGRAM_HEIGHT 10
 
 
 int main() {
-    char ch = 0; // -128 <-> 127
-    unsigned 
+    // we could use `char`, but there is no support for UTF-8
+    short ch = 0;
+    unsigned
+        // Temporary counter for current word length
         last_word_len = 0,
-        // Contains count of times each word with a specific length is met
-        // last item will contain all other words
-        // which length exceeds the MAX_WORD_LENGTH
+
+        // List of counters of how many words with same length
+        // does the user input contains
+        // The (word length - 1) corresponds to a specific position in array
+        // The latest position is reserved for counter for other words
+        // which lengths are exceeds (MAX_WORD_LENGTH - 1)
         word_lengths[MAX_WORD_LENGTH] = {0},
+        
+        // This will allow us to establish the relation between histogram height
+        // and the largest word count,
+        // so we can evenly distribute all counts throughtout the histogram
         most_frequent_word_count = 0;
 
 
@@ -33,16 +44,24 @@ int main() {
            MAX_WORD_LENGTH - 1
     );
 
-    // Count words with specific lenghts and save counts to the array
-    //
+
+    // Perform length counting and storing the counters in the array
+    // ------------------------------------------------------------------------
     while ((ch = getchar()) != EOF) {
+        if (ch < 0 || ch > 127) {
+            printf("\n\nONLY ASCII characters are allowed. CHECK YOUR INPUT");
+        }
+
+        // Only count lowercase and uppercase letters
         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
             ++last_word_len;
             continue;
-        } else if (last_word_len > 0) {
+        }
+        else if (last_word_len > 0) {
             if (last_word_len > MAX_WORD_LENGTH) 
                 last_word_len = MAX_WORD_LENGTH;
         
+            // Index start from 0 so a corresponding word length is biggery by 1
             word_lengths[last_word_len - 1] += 1;
 
             // Detect most frequent word and store amount of times it was met
@@ -55,19 +74,17 @@ int main() {
         last_word_len = 0;
     }
 
+
+    // Draw the histogram
+    // ------------------------------------------------------------------------
     // Ratio between the maximum height of histogram
-    // to the most frequent word count
-    // if the <wc> (word count) is larger 
+    // and the most frequent word count
+    // if the (word count) is larger than height then recalculate the ratio
     float histoh_to_wc_ratio = 1;
     if (most_frequent_word_count > HISTOGRAM_HEIGHT) {
-        histoh_to_wc_ratio = (float) HISTOGRAM_HEIGHT / most_frequent_word_count;
+        histoh_to_wc_ratio =
+            (float) HISTOGRAM_HEIGHT / most_frequent_word_count;
     }
-
-    printf("\n| K: %f | Most freq: %u\n\n" ,
-           
-           histoh_to_wc_ratio,
-           most_frequent_word_count
-    );
 
     for (unsigned i = HISTOGRAM_HEIGHT; i > 0; --i) {
         // convert current histo row number to word count
@@ -85,12 +102,17 @@ int main() {
         printf("\n");
     }
 
-    for (unsigned i = 0; i < 32 + MAX_WORD_LENGTH * 6; ++i)
+
+    // Print histogram notations at the bottom
+    // ------------------------------------------------------------------------
+    for (unsigned i = 0; i < 32 + MAX_WORD_LENGTH * 6; ++i) {
         printf("%c", '-');
+    }
     printf("\n| Word Count ^ | Word length: |");
-    for (unsigned i = 0; i < MAX_WORD_LENGTH; ++i) {
+
+    for (unsigned i = 1; i < MAX_WORD_LENGTH; ++i) {
         printf(" %3d |", i);
     }
-    printf("\n\n");
+    printf(" %2d+ |\n\n", MAX_WORD_LENGTH);
 
 }
